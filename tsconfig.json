@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "lib": ["es2022"],
+    "module": "NodeNext",
+    "target": "ES2020",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "noImplicitAny": false,
+    "verbatimModuleSyntax": false, // Todo change to true and fix all the error
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "allowJs": true,
+    "moduleResolution": "NodeNext",
+    "sourceMap": true,
+    "inlineSources": true,
+    // Set `sourceRoot` to  "/" to strip the build path prefix
+    // from generated source code references.
+    // This improves issue grouping in Sentry.
+    "sourceRoot": "/",
+    "outDir": "build",
+    "baseUrl": "src",
+    "paths": {
+      "config/*": ["config/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/node/index.d.ts"
+  ]
+}
