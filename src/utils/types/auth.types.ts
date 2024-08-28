@@ -1,7 +1,3 @@
-import {
-    User
-} from "@prisma/client"
+import { User } from '@prisma/client';
 
-export interface IUser extends User{
-
-}
+export interface IUser extends User {}

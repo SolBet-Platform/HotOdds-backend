@@ -10,8 +10,6 @@ import { auth } from '../repo/auth';
 import type { IUser } from '../utils/types/auth.types';
 
 export class AuthController {
-
-
   public async createOrFetchUser(
     req: Request,
     res: Response,
@@ -23,12 +21,12 @@ export class AuthController {
 
       const { address } = req.body;
       let user: IUser;
-      
-      user = await auth.findUserByPublicKey(address)
-      if (!user){
-        user = await auth.createUser(address)
+
+      user = await auth.findUserByPublicKey(address);
+      if (!user) {
+        user = await auth.createUser(address);
       }
-      const token =  tokenizer.sign(user.id);
+      const token = tokenizer.sign(user.id);
 
       const response = new SuccessResponse(
         'Identity fetched',

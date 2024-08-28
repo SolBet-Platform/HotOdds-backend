@@ -3,7 +3,9 @@ import { environment as env } from './config/environment';
 
 export class JWT {
   public sign(payload: string | Buffer | object): string {
-    return jwt.sign({data:payload}, env.appJwtSecret, {expiresIn: 60 * 60 * 24});
+    return jwt.sign({ data: payload }, env.appJwtSecret, {
+      expiresIn: 60 * 60 * 24,
+    });
   }
 
   public verify(token: string): jwt.JwtPayload | string {
@@ -11,4 +13,4 @@ export class JWT {
   }
 }
 
-export const tokenizer = new JWT()
+export const tokenizer = new JWT();
