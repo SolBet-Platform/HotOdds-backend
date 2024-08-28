@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@prisma/client": "5.9.1",
-    "axios": "1.6.7",
+    "axios": "^1.7.5",
     "bunyan": "1.8.15",
-    "express": "4.18.2",
+    "express": "^4.19.2",
     "helmet": "7.1.0",
     "jsonwebtoken": "9.0.2",
     "morgan": "1.10.0",
