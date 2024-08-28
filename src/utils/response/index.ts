@@ -10,4 +10,5 @@ export const Message = {
   WELCOME_MESSAGE: 'This is SolBet Backend',
   INVALID_ROUTE: 'Route not found!',
   INTERNAL_SERVER_ERROR: 'Internal Server',
+  SECRET_REQUIRED: 'Invalid access key',
 } as const;

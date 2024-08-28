@@ -19,7 +19,7 @@ interface Environment {
   };
   appEnv: string;
   port: number;
-
+  accessKey: string;
   appJwtSecret: string;
 }
 
@@ -42,5 +42,6 @@ export const environment: Environment = {
   },
   appEnv: process.env.NODE_ENV || defaultNodeEnv,
   port: Number(process.env.PORT) || defaultAppPort,
+  accessKey: process.env.SECRET || '',
   appJwtSecret: process.env.APP_JWT_SECRET || '',
 };
