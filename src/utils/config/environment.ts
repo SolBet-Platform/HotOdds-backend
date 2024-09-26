@@ -1,6 +1,7 @@
 const defaultNodeEnv = 'production';
 const defaultAppPort = 8081;
 const defaultPostgresPort = 5432;
+const sportApiBaseUrl = 'https://v3.football.api-sports.io/';
 interface Environment {
   database: {
     url: string;
@@ -21,6 +22,12 @@ interface Environment {
   port: number;
   accessKey: string;
   appJwtSecret: string;
+
+  sportApi: {
+    baseUrl: string;
+    host: string;
+    key: string;
+  };
 }
 
 export const environment: Environment = {
@@ -44,4 +51,9 @@ export const environment: Environment = {
   port: Number(process.env.PORT) || defaultAppPort,
   accessKey: process.env.SECRET || '',
   appJwtSecret: process.env.APP_JWT_SECRET || '',
+  sportApi: {
+    baseUrl: process.env.SPORT_API_URL || sportApiBaseUrl,
+    host: process.env.FOOTBALL_API_HOST || '',
+    key: process.env.FOOTBALL_API_SECRET || '',
+  },
 };

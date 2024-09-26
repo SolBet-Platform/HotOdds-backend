@@ -454,6 +454,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-cron@npm:^3":
+  version: 3.0.11
+  resolution: "@types/node-cron@npm:3.0.11"
+  checksum: 10c0/21cd0255988da2935bc8bf010da8b31624911ec10ef5d9a96a59c57193f60b27c1749b2e27c2a292a697d00195da5b8848a707345bb276abc39c96287ee82005
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:22.2.0":
   version: 22.2.0
   resolution: "@types/node@npm:22.2.0"
@@ -874,14 +881,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.5":
-  version: 1.7.5
-  resolution: "axios@npm:1.7.5"
+"axios@npm:^1.7.7":
+  version: 1.7.7
+  resolution: "axios@npm:1.7.7"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/1d5daeb28b3d1bb2a7b9f0743433c4bfbeaddc15461e50ebde487eec6c009af2515749d5261096dd430c90cd891bd310bcba5ec3967bae2033c4a307f58a6ad3
+  checksum: 10c0/4499efc89e86b0b49ffddc018798de05fab26e3bf57913818266be73279a6418c3ce8f9e934c7d2d707ab8c095e837fc6c90608fb7715b94d357720b5f568af7
   languageName: node
   linkType: hard
 
@@ -2957,6 +2964,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-cron@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "node-cron@npm:3.0.3"
+  dependencies:
+    uuid: "npm:8.3.2"
+  checksum: 10c0/e6e817c5bf28cca69f256ecc1a2cb737cf895cb0fe22f8ec58ce614cb74dcc22e93f495984a26ece51322473238ccc0ef53b4f373035697017b8c28bddacb9b9
+  languageName: node
+  linkType: hard
+
 "node-gyp@npm:latest":
   version: 10.2.0
   resolution: "node-gyp@npm:10.2.0"
@@ -3727,11 +3743,12 @@ __metadata:
     "@types/micromatch": "npm:^4"
     "@types/morgan": "npm:1.9.9"
     "@types/node": "npm:22.2.0"
+    "@types/node-cron": "npm:^3"
     "@types/sinon": "npm:17.0.3"
     "@types/supertest": "npm:6.0.2"
     "@typescript-eslint/eslint-plugin": "npm:6.20.0"
     "@typescript-eslint/parser": "npm:6.20.0"
-    axios: "npm:^1.7.5"
+    axios: "npm:^1.7.7"
     bunyan: "npm:1.8.15"
     docker-compose: "npm:0.24.3"
     eslint: "npm:8.56.0"
@@ -3745,6 +3762,7 @@ __metadata:
     micromatch: "npm:^4.0.8"
     morgan: "npm:1.10.0"
     nock: "npm:13.5.1"
+    node-cron: "npm:^3.0.3"
     nodemon: "npm:3.0.3"
     pino-pretty: "npm:10.3.1"
     prettier: "npm:3.2.4"
@@ -4240,6 +4258,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10c0/02ba649de1b7ca8854bfe20a82f1dfbdda3fb57a22ab4a8972a63a34553cf7aa51bc9081cf7e001b035b88186d23689d69e71b510e610a09a4c66f68aa95b672
+  languageName: node
+  linkType: hard
+
+"uuid@npm:8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 10c0/bcbb807a917d374a49f475fae2e87fdca7da5e5530820ef53f65ba1d12131bd81a92ecf259cc7ce317cbe0f289e7d79fdfebcef9bfa3087c8c8a2fa304c9be54
   languageName: node
   linkType: hard
 
