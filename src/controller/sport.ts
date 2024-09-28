@@ -133,7 +133,6 @@ export class SportApiService extends BaseSportApi {
     const response = await this.request('GET', route, params)
     return response.data
   }
-
 }
 
 export const sportApiService = new SportApiService();

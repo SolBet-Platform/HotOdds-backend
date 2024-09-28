@@ -5,12 +5,52 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum PaymentOption {
+  NO
+  YES
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String @id @default(uuid())
-  publicKey String @unique
+  id        String      @id @default(uuid())
+  publicKey String      @unique
+  tickets   BetTicket[] // A user can have many tickets
+}
+
+model MatchBet {
+  id             String    @id @default(uuid())
+  firstTeam      String
+  firstTeamLogo  String    @default("")
+  secondTeam     String
+  secondTeamLogo String    @default("")
+  option         String
+  matchDate      String    @default("")
+  ticket         BetTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId       String
+}
+
+model BetTicket {
+  id            String        @id @default(uuid())
+  user          User          @relation(fields: [userPublicKey], references: [publicKey], onDelete: Cascade)
+  userPublicKey String
+  bets          MatchBet[]
+  paid          PaymentOption @default(NO)
+  price         Float         @default(0.00)
+  rating        Int           @default(0)
+  createdAt     DateTime      @default(now())
+  ticketPay     TicketPay[]
+}
+
+model TicketPay {
+  id             String    @id @default(uuid())
+  userPublicKey  String
+  ticket         BetTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId       String
+  amount         Float     @default(0.00)
+  payedToAddress String
+  hash           String
 }
