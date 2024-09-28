@@ -7,6 +7,8 @@ import { AuthRoute } from './auth';
 import { AuthController } from '../controller/auth';
 import { SportRoute } from './sport';
 import { SportController } from '../controller/sport';
+import { TicketRoutes } from './ticket';
+import { TicketApiController } from '../controller/ticket';
 
 interface RouteInitializer {
   initialize(appInstance: express.Application): void;
@@ -15,6 +17,8 @@ export class BaseAppRoute implements RouteInitializer {
   protected readonly controller: Controller = new Controller();
   protected readonly authController: AuthController = new AuthController();
   protected readonly sportController: SportController = new SportController();
+  protected readonly ticketController: TicketApiController = new TicketApiController();
+
 
   //   private readonly validate = validate;
 
@@ -24,6 +28,7 @@ export class BaseAppRoute implements RouteInitializer {
 
     new AuthRoute(app, this.authController);
     new SportRoute(app, this.sportController);
+    new TicketRoutes(app, this.ticketController)
 
     app.all('/*', (req, res) => {
       return res
