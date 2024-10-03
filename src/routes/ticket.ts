@@ -31,6 +31,13 @@ export class TicketRoutes {
     );
 
     this.router.get(
+      '/fetch-my-paid-tickets',
+      secret(),
+      validUser,
+      AsyncWrapper(this.controller.fetchAllMyPaidTickets),
+    );
+
+    this.router.get(
       '/fetch-ticket/:ticketId',
       secret(),
       validUser,

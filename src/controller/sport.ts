@@ -71,7 +71,7 @@ export class SportApiService extends BaseSportApi {
       season: 2024,
     };
     const response = await this.request('GET', route, params);
-
+    console.log(response)
     return response.data as LeagueResponse;
   }
 

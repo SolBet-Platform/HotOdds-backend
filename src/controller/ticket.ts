@@ -150,6 +150,84 @@ export class TicketApiController {
     }
   }
 
+  public async fetchAllMyPaidTickets(
+    req: Request | any,
+    res: Response,
+  ): Promise<ApiResponse<void>> {
+    try {
+      const page = parseInt(req.query.page as string, 10) || 1;
+      const limit = parseInt(req.query.limit as string, 10) || 10;
+      const offset = (page - 1) * limit;
+      console.log("================")
+      console.log(req.id)
+
+      // loop through ticket pay
+      // return the id's
+      // use the id's to fetch tickets
+      const userId = req.id
+      const tickets = await prisma.ticketPay.findMany({where:{userPublicKey: userId}})
+
+      const ticketArray = await Promise.all(
+        tickets.map(async (t) => {
+          const ticket = await prisma.betTicket.findFirst({
+            where: { id: t.ticketId },
+          });
+          console.log("t", ticket);
+          return ticket; 
+        })
+      );
+      
+      const ticketResponses: Array<TicketResponses> = [];
+      const now = new Date();
+
+      for (const ticket of ticketArray) {
+        console.log(ticket);
+        const bets = await prisma.matchBet.findMany({
+          where: { ticketId: ticket.id},
+        });
+
+        if (!bets || bets.length === 0) continue;
+
+        const activeMatches = bets.filter(
+          (bet) => now <= new Date(bet.matchDate),
+        ).length;
+
+        if (activeMatches < 1) continue;
+
+        const ticketResponse: TicketResponses = {
+          id: ticket.id,
+          rating: ticket.rating,
+          address: ticket.userPublicKey,
+          totalMatch: bets.length,
+          activeMatch: activeMatches,
+          paid: ticket.paid,
+          price: ticket.price,
+        };
+
+        ticketResponses.push(ticketResponse);
+      }
+
+      const responseData = {
+        tickets: ticketResponses,
+      };
+
+      const response = new SuccessResponse(
+        'Tickets fetched successfully',
+        STANDARD.SUCCESS,
+        responseData,
+      );
+      return res.send(response);
+    } catch (error) {
+      logger.error(error);
+
+      if (!res.headersSent) {
+        return res
+          .status(ErrorsConstants.internal_error_status)
+          .send(new InternalServerError());
+      }
+    }
+  }
+
   public async FetchTicket(
     req: Request | any,
     res: Response,
@@ -182,6 +260,8 @@ export class TicketApiController {
       }
     }
   }
+
+  
 
   public async ticketPay(
     req: Request | any,
