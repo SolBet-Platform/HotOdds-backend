@@ -27,8 +27,8 @@ export class SportRoute {
       AsyncWrapper(this.controller.fetchBetDexEvents),
     );
 
-    this.router.get(
-      '/team/:id',
+    this.router.post(
+      '/team-stats',
       secret(),
       AsyncWrapper(this.controller.fetchTeams)
     )
@@ -39,7 +39,7 @@ export class SportRoute {
       AsyncWrapper(this.controller.fetchHeadToHead)
     )
 
-    this.router.get(
+    this.router.post(
       '/fixtures',
       secret(),
       AsyncWrapper(this.controller.fetchFixtures)

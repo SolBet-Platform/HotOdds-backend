@@ -21,7 +21,6 @@ export class AuthController {
 
       const { address } = req.body;
       let user: IUser;
-
       user = await auth.findUserByPublicKey(address);
       if (!user) {
         user = await auth.createUser(address);
