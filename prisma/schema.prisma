@@ -22,15 +22,17 @@ model User {
 }
 
 model MatchBet {
-  id             String    @id @default(uuid())
+  id             String @id @default(uuid())
   firstTeam      String
-  firstTeamLogo  String    @default("")
+  firstTeamLogo  String @default("")
   secondTeam     String
-  secondTeamLogo String    @default("")
+  secondTeamLogo String @default("")
   option         String
-  matchDate      String    @default("")
-  ticket         BetTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  ticketId       String
+  matchDate      String @default("")
+  fixtureId      Int @default(0)
+
+  ticket   BetTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId String
 }
 
 model BetTicket {

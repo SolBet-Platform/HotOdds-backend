@@ -19,6 +19,7 @@ interface MatchBet {
   secondTeam: string;
   matchDate: string;
   option: string;
+  fixtureId: number
 }
 
 interface BetTicket {

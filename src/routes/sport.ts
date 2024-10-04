@@ -62,5 +62,11 @@ export class SportRoute {
       secret(),
       AsyncWrapper(this.controller.fetchPlayer)
     )
+
+    this.router.get(
+      '/odds/:fixtureId',
+      secret(),
+      AsyncWrapper(this.controller.fetchOdd)
+    )
   }
 }

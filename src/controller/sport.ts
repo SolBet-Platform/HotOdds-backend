@@ -11,7 +11,10 @@ import SuccessResponse from '../utils/response/successResponse';
 import { ApiResponse } from '../utils/types';
 import { LeagueResponse } from '../utils/types/sport.types';
 import { addDays, formatDate } from '../utils/date';
+import { promises as fs } from 'fs';
+import path from 'path';
 
+const filePath = path.join(__dirname, 'leagues.json');
 // import * as fixtures from "../static/fixtures.json"
 // import { reqCaller } from '../utils/saveFIle';
 
@@ -22,6 +25,7 @@ interface IFixtures {
 
 
 interface IFixturesRequest {
+  country: string
   leagueId: number,
   name: string,
  }
@@ -65,14 +69,27 @@ export class SportApiService extends BaseSportApi {
     super()
   }
   public async getFixtures(): Promise<LeagueResponse> {
-    const route = 'leagues';
-    const params = {
-      current: true,
-      season: 2024,
-    };
-    const response = await this.request('GET', route, params);
-    console.log(response)
-    return response.data as LeagueResponse;
+    const fileExists = await fs.stat(filePath).then(() => true).catch(() => false);
+    
+    if(fileExists) {
+      const fileData = await fs.readFile(filePath, 'utf-8');
+      console.log('Returning cached data');
+      return JSON.parse(fileData) as LeagueResponse;
+    } else {
+      const route = 'leagues';
+      const params = {
+        current: true,
+        season: new Date().getFullYear(),
+      };
+
+      const response = await this.request('GET', route, params);
+      console.log(response);
+
+      // Write the response data to a file
+      await fs.writeFile(filePath, JSON.stringify(response.data), 'utf-8');
+      // Return the data
+      return response.data as LeagueResponse;
+    }
   }
 
   public async getBetDexEvents(): Promise<{ eventCategories: Array<unknown> }> {
@@ -86,10 +103,19 @@ export class SportApiService extends BaseSportApi {
   }
 
   public async getTeams(body: ITeamsBody): Promise<unknown> {
+    const fixturePath = path.join(__dirname, `fixtures-${body.fixtureId}.json`);
     const route = 'teams/statistics';
     const date = new Date().getFullYear();
     
     // Create a helper function for fetching team statistics
+    const fileExists = await fs.stat(fixturePath).then(() => true).catch(() => false);
+    
+    // If the file exists, read and parse its content
+    if (fileExists) {
+        const fileContent = await fs.readFile(fixturePath, 'utf-8');
+        return JSON.parse(fileContent) as LeagueResponse; // Parse the file content
+    }
+
     const fetchTeamStatistics = async (teamId: Number) => {
         const params = {
             league: body.league,
@@ -106,8 +132,8 @@ export class SportApiService extends BaseSportApi {
     // Fetch lineup data for the fixture
     const lineupFixtureRoute = 'fixtures/lineups';
     const lineUpParams = { 
-      fixture: body.fixtureId
-     };
+        fixture: body.fixtureId
+    };
     const teamLineUp = await this.request('GET', lineupFixtureRoute, lineUpParams);
 
     // Fetch head-to-head data between two teams
@@ -118,11 +144,16 @@ export class SportApiService extends BaseSportApi {
     const h2hResponse = await this.request('GET', headToHeadRoute, headToHeadParams);
 
     // Return the consolidated response
-    return {
+    const data = {
         statistics: teamStaticsArray,
         lineup: teamLineUp.data,
         head2head: h2hResponse.data,
     };
+
+    // Save the data to the file
+    await fs.writeFile(fixturePath, JSON.stringify(data), 'utf-8');
+
+    return data;
 }
 
   public async fetchHeadToHeadAnalysis(teamId1:string, teamId2:string):Promise<unknown>{
@@ -138,6 +169,32 @@ export class SportApiService extends BaseSportApi {
     const response = await this.request('GET', route, params);
     return response.data
   }
+
+  
+  public async fetchOdd(req: Request):Promise<unknown>{
+    const route = 'odds'
+
+    
+    const { fixtureId} = req.params;
+    const params = {
+      fixture: fixtureId,
+      season: new Date().getFullYear()
+
+    }
+    const oddPath = path.join(__dirname, `odd-${fixtureId}.json`);
+
+    const fileExists = await fs.stat(oddPath).then(() => true).catch(() => false);
+    if (fileExists) {
+      const fileContent = await fs.readFile(oddPath, 'utf-8');
+      return JSON.parse(fileContent) as LeagueResponse; // Parse the file content
+  } else {
+   const response = await this.request('GET', route, params);
+   await fs.writeFile(oddPath, JSON.stringify(response.data), 'utf-8');
+
+    return response.data
+  }
+  }
+  
 
   public async getTeamStatistics(team: string, league: string):Promise<unknown>{
     const route = 'teams/statistics'
@@ -160,11 +217,16 @@ export class SportApiService extends BaseSportApi {
     const newDate = new Date();
     const fromDate = formatDate(newDate);
     const toDate = addDays(newDate, 14);
-  
-    // Assuming the structure of body.data is the array you shared
-    const datas: IFixturesRequest[] = body.data; // Array of league info objects
-  
-    // Create an array of promises for all fixture requests
+    const datas: IFixturesRequest[] = body.data;
+    const fixturePath = path.join(__dirname, `fixtures-${datas[0].country}.json`);
+
+    const fileExists = await fs.stat(fixturePath).then(() => true).catch(() => false);
+
+    if(fileExists) {
+      const fileData = await fs.readFile(fixturePath, 'utf-8');
+      console.log('Returning cached data');
+      return JSON.parse(fileData) as LeagueResponse;
+    } else {
     const fixturePromises = datas.map(async (data: IFixturesRequest) => {
       const params = {
         league: Number(data.leagueId),
@@ -172,24 +234,22 @@ export class SportApiService extends BaseSportApi {
         from: fromDate,
         to: toDate,
         status: "NS",
-        timezone: "Africa/Accra"
+        timezone: "Africa/Lagos"
       };
   
-      // Make the request to get fixtures for the given league
       const response = await this.request('GET', route, params);
   
-      // Ensure that only the relevant data is extracted from the response
       return {
         league: data.name,
-        matches: response.data // Assuming response.data is what contains the match data
+        matches: response.data
       };
     });
   
-    // Wait for all fixture requests to complete concurrently
     const fixturesResponse = await Promise.all(fixturePromises);
-  
-    // Return the collected fixture data
+    await fs.writeFile(fixturePath, JSON.stringify(fixturesResponse), 'utf-8');
     return fixturesResponse;
+    }
+
   }
   
   public async fetchSquad(team: string):Promise<unknown>{
@@ -214,6 +274,8 @@ export class SportApiService extends BaseSportApi {
     return response.data
   }
 }
+
+
 
 export const sportApiService = new SportApiService();
 
@@ -384,6 +446,30 @@ export class SportController extends BaseSportApi{
       const playerId = req.params.id
 
       const player = await sportApiService.fetchPlayer(playerId)
+
+      const response = new SuccessResponse(
+        'players fetched',
+        STANDARD.SUCCESS,
+        player
+      );
+
+      return res.send(response);
+    } catch (error) {
+      logger.error(error);
+      res
+        .status(ErrorsConstants.internal_error_status)
+        .send(new InternalServerError());  
+    }
+  }
+
+  public async fetchOdd(
+    req: Request,
+    res: Response,   
+  ):Promise<ApiResponse<void>>{
+    try {
+      const playerId = req.params.id
+
+      const player = await sportApiService.fetchOdd(req)
 
       const response = new SuccessResponse(
         'players fetched',
